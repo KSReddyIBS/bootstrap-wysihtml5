@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Form Gallery - Bootstrap Forms</title>
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="lib/css/bootstrap.min.css">
+    <!-- Custom Form Gallery CSS -->
+    <link rel="stylesheet" type="text/css" href="form-gallery.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation Header -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html">Bootstrap WYSIHTML5</a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="index.html">Home</a></li>
+                    <li class="active"><a href="form-gallery.html">Form Gallery</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container-fluid main-container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>Dynamic Form Gallery <small>30 Core Form & Input Patterns</small></h1>
+            <p class="lead">Browse, preview, copy, and download form implementations for your projects</p>
+        </div>
+
+        <!-- Controls Row -->
+        <div class="row controls-section">
+            <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label for="formSelector">Select Form Pattern:</label>
+                    <select id="formSelector" class="form-control">
+                        <option value="">-- Choose a Form Pattern --</option>
+                        <optgroup label="Basic Forms">
+                            <option value="single-column">1. Single Column Form</option>
+                            <option value="horizontal-form">2. Horizontal Form</option>
+                            <option value="two-column">3. Two Column Grid Form</option>
+                            <option value="three-column">4. Three Column Grid Form</option>
+                            <option value="inline-form">5. Inline Form</option>
+                        </optgroup>
+                        <optgroup label="Input Elements">
+                            <option value="text-inputs">6. Text Input Variations</option>
+                            <option value="input-groups">7. Input Groups with Addons</option>
+                            <option value="input-sizing">8. Input Sizing Examples</option>
+                            <option value="textarea">9. Textarea with Counter</option>
+                            <option value="select-dropdown">10. Select Dropdowns</option>
+                        </optgroup>
+                        <optgroup label="Checkbox & Radio">
+                            <option value="checkbox-basic">11. Basic Checkboxes</option>
+                            <option value="checkbox-inline">12. Inline Checkboxes</option>
+                            <option value="radio-basic">13. Basic Radio Buttons</option>
+                            <option value="radio-inline">14. Inline Radio Buttons</option>
+                            <option value="switch-toggle">15. Toggle Switches</option>
+                        </optgroup>
+                        <optgroup label="Advanced Inputs">
+                            <option value="date-time">16. Date & Time Inputs</option>
+                            <option value="file-upload">17. File Upload</option>
+                            <option value="color-picker">18. Color Picker</option>
+                            <option value="range-slider">19. Range Slider</option>
+                            <option value="number-spinner">20. Number Spinner</option>
+                        </optgroup>
+                        <optgroup label="Form Components">
+                            <option value="validation-states">21. Validation States</option>
+                            <option value="help-text">22. Help Text & Tooltips</option>
+                            <option value="input-masks">23. Input Masks</option>
+                            <option value="autocomplete">24. Autocomplete Input</option>
+                            <option value="tags-input">25. Tags Input</option>
+                        </optgroup>
+                        <optgroup label="Complex Forms">
+                            <option value="registration">26. Registration Form</option>
+                            <option value="login">27. Login Form</option>
+                            <option value="contact">28. Contact Form</option>
+                            <option value="payment">29. Payment Form</option>
+                            <option value="search-filter">30. Search & Filter Form</option>
+                        </optgroup>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="action-buttons">
+                    <button id="copyHtmlBtn" class="btn btn-primary" disabled>
+                        <i class="fa fa-copy"></i> Copy HTML
+                    </button>
+                    <button id="copyCssBtn" class="btn btn-info" disabled>
+                        <i class="fa fa-copy"></i> Copy CSS
+                    </button>
+                    <button id="copyJsBtn" class="btn btn-warning" disabled>
+                        <i class="fa fa-copy"></i> Copy JS
+                    </button>
+                    <button id="downloadBtn" class="btn btn-success" disabled>
+                        <i class="fa fa-download"></i> Download All
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alert for copy feedback -->
+        <div id="alertContainer"></div>
+
+        <!-- Preview Section -->
+        <div class="row preview-section">
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            <i class="fa fa-eye"></i> Live Preview
+                            <span class="pull-right">
+                                <button id="toggleCode" class="btn btn-xs btn-default">
+                                    <i class="fa fa-code"></i> View Code
+                                </button>
+                            </span>
+                        </h3>
+                    </div>
+                    <div class="panel-body preview-container" id="previewContainer">
+                        <div class="empty-state">
+                            <i class="fa fa-hand-pointer-o fa-3x"></i>
+                            <p>Select a form pattern from the dropdown above to see the preview</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Code View Section -->
+        <div class="row code-section" id="codeSection" style="display: none;">
+            <div class="col-md-12">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active">
+                        <a href="#htmlCode" data-toggle="tab">HTML</a>
+                    </li>
+                    <li role="presentation">
+                        <a href="#cssCode" data-toggle="tab">CSS</a>
+                    </li>
+                    <li role="presentation">
+                        <a href="#jsCode" data-toggle="tab">JavaScript</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="htmlCode">
+                        <pre><code id="htmlCodeContent"></code></pre>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="cssCode">
+                        <pre><code id="cssCodeContent"></code></pre>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="jsCode">
+                        <pre><code id="jsCodeContent"></code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container-fluid">
+            <p class="text-muted">
+                Dynamic Form Gallery - Built with Bootstrap &amp; JavaScript
+                <span class="pull-right">
+                    <a href="https://github.com/jhollingworth/bootstrap-wysihtml5/" target="_blank">
+                        <i class="fa fa-github"></i> View on GitHub
+                    </a>
+                </span>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="lib/js/jquery-1.7.2.min.js"></script>
+    <script src="lib/js/bootstrap.min.js"></script>
+    <script src="form-gallery.js"></script>
+</body>
+</html>
