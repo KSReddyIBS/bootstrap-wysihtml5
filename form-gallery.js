@@ -190,18 +190,87 @@
     
     var formPatterns = generateFormPatterns();
     var currentPattern = null;
+    var favorites = [];
+    var allOptions = [];
     
     $(document).ready(function() {
         initializeEventHandlers();
+        loadFavorites();
+        cacheOptions();
     });
     
     function initializeEventHandlers() {
+        // Form selector change
         $("#formSelector").on("change", function() {
             var key = $(this).val();
             if (key && formPatterns[key]) {
                 loadPattern(key);
             } else {
                 showEmptyState();
+            }
+        });
+        
+        // Search functionality
+        $("#patternSearch").on("input", function() {
+            var searchTerm = $(this).val().toLowerCase();
+            filterPatterns(searchTerm);
+        });
+        
+        // Category buttons
+        $(".category-btn").on("click", function() {
+            var category = $(this).data("category");
+            $(".category-btn").removeClass("active");
+            $(this).addClass("active");
+            filterByCategory(category);
+        });
+        
+        // Preview size controls
+        $("#previewMobile").on("click", function() {
+            setPreviewSize("mobile");
+        });
+        
+        $("#previewTablet").on("click", function() {
+            setPreviewSize("tablet");
+        });
+        
+        $("#previewDesktop").on("click", function() {
+            setPreviewSize("desktop");
+        });
+        
+        // Favorite button
+        $("#favoriteBtn").on("click", function() {
+            toggleFavorite();
+        });
+        
+        // Keyboard shortcuts
+        $(document).on("keydown", function(e) {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case "1":
+                        e.preventDefault();
+                        $("#copyHtmlBtn").click();
+                        break;
+                    case "2":
+                        e.preventDefault();
+                        $("#copyCssBtn").click();
+                        break;
+                    case "3":
+                        e.preventDefault();
+                        $("#copyJsBtn").click();
+                        break;
+                    case "d":
+                    case "D":
+                        e.preventDefault();
+                        $("#downloadBtn").click();
+                        break;
+                }
+            }
+            // Enter key on select
+            if (e.key === "Enter" && document.activeElement.id === "formSelector") {
+                var key = $("#formSelector").val();
+                if (key) {
+                    loadPattern(key);
+                }
             }
         });
         
@@ -226,6 +295,185 @@
         });
     }
     
+    function cacheOptions() {
+        $("#formSelector option").each(function() {
+            if ($(this).val()) {
+                allOptions.push({
+                    value: $(this).val(),
+                    text: $(this).text(),
+                    category: $(this).data("category"),
+                    element: $(this)
+                });
+            }
+        });
+    }
+    
+    function filterPatterns(searchTerm) {
+        if (!searchTerm) {
+            // Show all
+            $("#formSelector option").show();
+            $("#formSelector optgroup").show();
+            updatePatternCount(allOptions.length);
+            return;
+        }
+        
+        var visibleCount = 0;
+        $("#formSelector option").each(function() {
+            var optionText = $(this).text().toLowerCase();
+            if (optionText.includes(searchTerm)) {
+                $(this).show();
+                visibleCount++;
+            } else {
+                $(this).hide();
+            }
+        });
+        
+        // Hide empty optgroups
+        $("#formSelector optgroup").each(function() {
+            var hasVisible = $(this).find("option:visible").length > 0;
+            if (hasVisible) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+        
+        updatePatternCount(visibleCount);
+    }
+    
+    function filterByCategory(category) {
+        $("#patternSearch").val("");
+        
+        if (!category) {
+            $("#formSelector option").show();
+            $("#formSelector optgroup").show();
+            updatePatternCount(allOptions.length);
+            return;
+        }
+        
+        var visibleCount = 0;
+        $("#formSelector option").each(function() {
+            if ($(this).data("category") === category) {
+                $(this).show();
+                visibleCount++;
+            } else {
+                $(this).hide();
+            }
+        });
+        
+        $("#formSelector optgroup").each(function() {
+            if ($(this).data("category") === category) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+        
+        updatePatternCount(visibleCount);
+    }
+    
+    function updatePatternCount(count) {
+        $("#patternCount").text(count);
+    }
+    
+    function setPreviewSize(size) {
+        var container = $("#previewContainer");
+        container.removeClass("preview-mobile preview-tablet preview-desktop");
+        
+        $(".preview-size-controls .btn").removeClass("active");
+        
+        switch(size) {
+            case "mobile":
+                container.addClass("preview-mobile");
+                $("#previewMobile").addClass("active");
+                break;
+            case "tablet":
+                container.addClass("preview-tablet");
+                $("#previewTablet").addClass("active");
+                break;
+            case "desktop":
+            default:
+                container.addClass("preview-desktop");
+                $("#previewDesktop").addClass("active");
+                break;
+        }
+    }
+    
+    function loadFavorites() {
+        try {
+            var stored = localStorage.getItem("formGalleryFavorites");
+            if (stored) {
+                favorites = JSON.parse(stored);
+            }
+        } catch(e) {
+            console.error("Could not load favorites:", e);
+        }
+    }
+    
+    function saveFavorites() {
+        try {
+            localStorage.setItem("formGalleryFavorites", JSON.stringify(favorites));
+        } catch(e) {
+            console.error("Could not save favorites:", e);
+        }
+    }
+    
+    function toggleFavorite() {
+        if (!currentPattern) return;
+        
+        var patternKey = $("#formSelector").val();
+        var index = favorites.indexOf(patternKey);
+        
+        if (index > -1) {
+            favorites.splice(index, 1);
+            $("#favoriteBtn i").removeClass("fa-star").addClass("fa-star-o");
+            showAlert("Removed from favorites", "info");
+        } else {
+            favorites.push(patternKey);
+            $("#favoriteBtn i").removeClass("fa-star-o").addClass("fa-star");
+            showAlert("Added to favorites", "success");
+        }
+        
+        saveFavorites();
+    }
+    
+    function updateFavoriteButton(patternKey) {
+        $("#favoriteBtn").prop("disabled", false);
+        if (favorites.indexOf(patternKey) > -1) {
+            $("#favoriteBtn i").removeClass("fa-star-o").addClass("fa-star");
+        } else {
+            $("#favoriteBtn i").removeClass("fa-star").addClass("fa-star-o");
+        }
+    }
+    
+    function getPatternMetadata(key) {
+        var metadata = {
+            description: "A form pattern example",
+            category: "Form",
+            complexity: "Beginner"
+        };
+        
+        // Add specific metadata based on pattern
+        if (key.includes("registration") || key.includes("payment") || key.includes("search-filter")) {
+            metadata.complexity = "Advanced";
+        } else if (key.includes("validation") || key.includes("autocomplete") || key.includes("tags")) {
+            metadata.complexity = "Intermediate";
+        }
+        
+        return metadata;
+    }
+    
+    function showPatternInfo(key) {
+        var pattern = formPatterns[key];
+        var metadata = getPatternMetadata(key);
+        var category = $("#formSelector option:selected").parent().attr("label") || "Form";
+        
+        $("#patternDescription").text("A " + pattern.name.toLowerCase() + " implementation with Bootstrap styling.");
+        $("#patternCategory").text(category);
+        $("#patternComplexity").text(metadata.complexity);
+        $("#patternInfo").fadeIn();
+    }
+    
     function loadPattern(key) {
         currentPattern = formPatterns[key];
         $("#previewContainer").html(currentPattern.html);
@@ -244,12 +492,15 @@
         }
         
         $("#copyHtmlBtn, #copyCssBtn, #copyJsBtn, #downloadBtn").prop("disabled", false);
+        updateFavoriteButton(key);
+        showPatternInfo(key);
         showAlert("Pattern loaded: " + currentPattern.name, "success");
     }
     
     function showEmptyState() {
-        $("#previewContainer").html('<div class="empty-state"><i class="fa fa-hand-pointer-o fa-3x"></i><p>Select a form pattern from the dropdown</p></div>');
-        $("#copyHtmlBtn, #copyCssBtn, #copyJsBtn, #downloadBtn").prop("disabled", true);
+        $("#previewContainer").html('<div class="empty-state"><i class="fa fa-hand-pointer-o fa-3x"></i><h3>Welcome to the Form Gallery!</h3><p>Select a form pattern from the list or use the category buttons above to get started</p><div class="empty-state-features"><div class="row"><div class="col-sm-4"><i class="fa fa-eye fa-2x"></i><p><strong>Live Preview</strong><br>See forms in action</p></div><div class="col-sm-4"><i class="fa fa-code fa-2x"></i><p><strong>View Code</strong><br>HTML, CSS & JavaScript</p></div><div class="col-sm-4"><i class="fa fa-download fa-2x"></i><p><strong>Export</strong><br>Ready to use files</p></div></div></div></div>');
+        $("#copyHtmlBtn, #copyCssBtn, #copyJsBtn, #downloadBtn, #favoriteBtn").prop("disabled", true);
+        $("#patternInfo").hide();
         currentPattern = null;
     }
     

@@ -42,71 +42,144 @@
             <p class="lead">Browse, preview, copy, and download form implementations for your projects</p>
         </div>
 
+        <!-- Quick Category Navigation -->
+        <div class="row category-nav">
+            <div class="col-md-12">
+                <div class="btn-group btn-group-justified category-buttons" role="group">
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-default category-btn" data-category="basic">
+                            <i class="fa fa-th-list"></i> Basic Forms
+                        </button>
+                    </div>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-default category-btn" data-category="input">
+                            <i class="fa fa-keyboard-o"></i> Input Elements
+                        </button>
+                    </div>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-default category-btn" data-category="checkbox">
+                            <i class="fa fa-check-square-o"></i> Checkbox & Radio
+                        </button>
+                    </div>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-default category-btn" data-category="advanced">
+                            <i class="fa fa-sliders"></i> Advanced
+                        </button>
+                    </div>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-default category-btn" data-category="components">
+                            <i class="fa fa-puzzle-piece"></i> Components
+                        </button>
+                    </div>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-default category-btn" data-category="complex">
+                            <i class="fa fa-file-text-o"></i> Complex Forms
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Controls Row -->
         <div class="row controls-section">
             <div class="col-md-6 col-sm-12">
                 <div class="form-group">
+                    <label for="patternSearch">
+                        <i class="fa fa-search"></i> Search Form Patterns:
+                        <small class="text-muted">(or use category buttons above)</small>
+                    </label>
+                    <input type="text" id="patternSearch" class="form-control" placeholder="Type to search patterns...">
+                </div>
+                <div class="form-group">
                     <label for="formSelector">Select Form Pattern:</label>
-                    <select id="formSelector" class="form-control">
-                        <option value="">-- Choose a Form Pattern --</option>
-                        <optgroup label="Basic Forms">
-                            <option value="single-column">1. Single Column Form</option>
-                            <option value="horizontal-form">2. Horizontal Form</option>
-                            <option value="two-column">3. Two Column Grid Form</option>
-                            <option value="three-column">4. Three Column Grid Form</option>
-                            <option value="inline-form">5. Inline Form</option>
+                    <select id="formSelector" class="form-control" size="8">
+                        <optgroup label="Basic Forms" data-category="basic">
+                            <option value="single-column" data-category="basic">1. Single Column Form</option>
+                            <option value="horizontal-form" data-category="basic">2. Horizontal Form</option>
+                            <option value="two-column" data-category="basic">3. Two Column Grid Form</option>
+                            <option value="three-column" data-category="basic">4. Three Column Grid Form</option>
+                            <option value="inline-form" data-category="basic">5. Inline Form</option>
                         </optgroup>
-                        <optgroup label="Input Elements">
-                            <option value="text-inputs">6. Text Input Variations</option>
-                            <option value="input-groups">7. Input Groups with Addons</option>
-                            <option value="input-sizing">8. Input Sizing Examples</option>
-                            <option value="textarea">9. Textarea with Counter</option>
-                            <option value="select-dropdown">10. Select Dropdowns</option>
+                        <optgroup label="Input Elements" data-category="input">
+                            <option value="text-inputs" data-category="input">6. Text Input Variations</option>
+                            <option value="input-groups" data-category="input">7. Input Groups with Addons</option>
+                            <option value="input-sizing" data-category="input">8. Input Sizing Examples</option>
+                            <option value="textarea" data-category="input">9. Textarea with Counter</option>
+                            <option value="select-dropdown" data-category="input">10. Select Dropdowns</option>
                         </optgroup>
-                        <optgroup label="Checkbox & Radio">
-                            <option value="checkbox-basic">11. Basic Checkboxes</option>
-                            <option value="checkbox-inline">12. Inline Checkboxes</option>
-                            <option value="radio-basic">13. Basic Radio Buttons</option>
-                            <option value="radio-inline">14. Inline Radio Buttons</option>
-                            <option value="switch-toggle">15. Toggle Switches</option>
+                        <optgroup label="Checkbox & Radio" data-category="checkbox">
+                            <option value="checkbox-basic" data-category="checkbox">11. Basic Checkboxes</option>
+                            <option value="checkbox-inline" data-category="checkbox">12. Inline Checkboxes</option>
+                            <option value="radio-basic" data-category="checkbox">13. Basic Radio Buttons</option>
+                            <option value="radio-inline" data-category="checkbox">14. Inline Radio Buttons</option>
+                            <option value="switch-toggle" data-category="checkbox">15. Toggle Switches</option>
                         </optgroup>
-                        <optgroup label="Advanced Inputs">
-                            <option value="date-time">16. Date & Time Inputs</option>
-                            <option value="file-upload">17. File Upload</option>
-                            <option value="color-picker">18. Color Picker</option>
-                            <option value="range-slider">19. Range Slider</option>
-                            <option value="number-spinner">20. Number Spinner</option>
+                        <optgroup label="Advanced Inputs" data-category="advanced">
+                            <option value="date-time" data-category="advanced">16. Date & Time Inputs</option>
+                            <option value="file-upload" data-category="advanced">17. File Upload</option>
+                            <option value="color-picker" data-category="advanced">18. Color Picker</option>
+                            <option value="range-slider" data-category="advanced">19. Range Slider</option>
+                            <option value="number-spinner" data-category="advanced">20. Number Spinner</option>
                         </optgroup>
-                        <optgroup label="Form Components">
-                            <option value="validation-states">21. Validation States</option>
-                            <option value="help-text">22. Help Text & Tooltips</option>
-                            <option value="input-masks">23. Input Masks</option>
-                            <option value="autocomplete">24. Autocomplete Input</option>
-                            <option value="tags-input">25. Tags Input</option>
+                        <optgroup label="Form Components" data-category="components">
+                            <option value="validation-states" data-category="components">21. Validation States</option>
+                            <option value="help-text" data-category="components">22. Help Text & Tooltips</option>
+                            <option value="input-masks" data-category="components">23. Input Masks</option>
+                            <option value="autocomplete" data-category="components">24. Autocomplete Input</option>
+                            <option value="tags-input" data-category="components">25. Tags Input</option>
                         </optgroup>
-                        <optgroup label="Complex Forms">
-                            <option value="registration">26. Registration Form</option>
-                            <option value="login">27. Login Form</option>
-                            <option value="contact">28. Contact Form</option>
-                            <option value="payment">29. Payment Form</option>
-                            <option value="search-filter">30. Search & Filter Form</option>
+                        <optgroup label="Complex Forms" data-category="complex">
+                            <option value="registration" data-category="complex">26. Registration Form</option>
+                            <option value="login" data-category="complex">27. Login Form</option>
+                            <option value="contact" data-category="complex">28. Contact Form</option>
+                            <option value="payment" data-category="complex">29. Payment Form</option>
+                            <option value="search-filter" data-category="complex">30. Search & Filter Form</option>
                         </optgroup>
                     </select>
+                    <p class="help-block">
+                        <i class="fa fa-info-circle"></i> 
+                        <strong>Tip:</strong> Use arrow keys to navigate, Enter to select
+                        <span class="pull-right">
+                            <span id="patternCount" class="badge">30</span> patterns available
+                        </span>
+                    </p>
                 </div>
             </div>
             <div class="col-md-6 col-sm-12">
+                <div class="pattern-info" id="patternInfo" style="display: none;">
+                    <h4><i class="fa fa-info-circle"></i> Pattern Information</h4>
+                    <p id="patternDescription"></p>
+                    <div class="pattern-meta">
+                        <span class="label label-primary" id="patternCategory"></span>
+                        <span class="label label-default" id="patternComplexity"></span>
+                    </div>
+                </div>
                 <div class="action-buttons">
-                    <button id="copyHtmlBtn" class="btn btn-primary" disabled>
-                        <i class="fa fa-copy"></i> Copy HTML
+                    <div class="btn-group btn-group-sm preview-size-controls" role="group">
+                        <button type="button" class="btn btn-default" id="previewMobile" title="Mobile View (375px)">
+                            <i class="fa fa-mobile"></i>
+                        </button>
+                        <button type="button" class="btn btn-default" id="previewTablet" title="Tablet View (768px)">
+                            <i class="fa fa-tablet"></i>
+                        </button>
+                        <button type="button" class="btn btn-default active" id="previewDesktop" title="Desktop View (100%)">
+                            <i class="fa fa-desktop"></i>
+                        </button>
+                    </div>
+                    <button id="favoriteBtn" class="btn btn-default" disabled title="Add to favorites">
+                        <i class="fa fa-star-o"></i>
                     </button>
-                    <button id="copyCssBtn" class="btn btn-info" disabled>
-                        <i class="fa fa-copy"></i> Copy CSS
+                    <button id="copyHtmlBtn" class="btn btn-primary" disabled title="Copy HTML (Ctrl+1)">
+                        <i class="fa fa-copy"></i> HTML
                     </button>
-                    <button id="copyJsBtn" class="btn btn-warning" disabled>
-                        <i class="fa fa-copy"></i> Copy JS
+                    <button id="copyCssBtn" class="btn btn-info" disabled title="Copy CSS (Ctrl+2)">
+                        <i class="fa fa-copy"></i> CSS
                     </button>
-                    <button id="downloadBtn" class="btn btn-success" disabled>
-                        <i class="fa fa-download"></i> Download All
+                    <button id="copyJsBtn" class="btn btn-warning" disabled title="Copy JS (Ctrl+3)">
+                        <i class="fa fa-copy"></i> JS
+                    </button>
+                    <button id="downloadBtn" class="btn btn-success" disabled title="Download (Ctrl+D)">
+                        <i class="fa fa-download"></i> Download
                     </button>
                 </div>
             </div>
@@ -132,7 +205,24 @@
                     <div class="panel-body preview-container" id="previewContainer">
                         <div class="empty-state">
                             <i class="fa fa-hand-pointer-o fa-3x"></i>
-                            <p>Select a form pattern from the dropdown above to see the preview</p>
+                            <h3>Welcome to the Form Gallery!</h3>
+                            <p>Select a form pattern from the list or use the category buttons above to get started</p>
+                            <div class="empty-state-features">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <i class="fa fa-eye fa-2x"></i>
+                                        <p><strong>Live Preview</strong><br>See forms in action</p>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <i class="fa fa-code fa-2x"></i>
+                                        <p><strong>View Code</strong><br>HTML, CSS & JavaScript</p>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <i class="fa fa-download fa-2x"></i>
+                                        <p><strong>Export</strong><br>Ready to use files</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
