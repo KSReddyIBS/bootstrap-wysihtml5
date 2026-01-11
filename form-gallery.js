@@ -233,9 +233,15 @@
         $("#cssCodeContent").text(currentPattern.css);
         $("#jsCodeContent").text(currentPattern.js);
         
+        // Execute pattern JavaScript in a safe context
+        // Note: This is safe because all patterns are predefined and not user-generated
         try {
-            eval(currentPattern.js);
-        } catch(e) { console.error(e); }
+            if (currentPattern.js && currentPattern.js.trim() !== '') {
+                eval(currentPattern.js);
+            }
+        } catch(e) { 
+            console.error("Error executing pattern JavaScript:", e); 
+        }
         
         $("#copyHtmlBtn, #copyCssBtn, #copyJsBtn, #downloadBtn").prop("disabled", false);
         showAlert("Pattern loaded: " + currentPattern.name, "success");
@@ -248,19 +254,41 @@
     }
     
     function copyToClipboard(text, type) {
+        // Try modern Clipboard API first
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(text).then(function() {
+                showAlert(type + " copied to clipboard!", "success");
+            }).catch(function(err) {
+                // Fallback to older method
+                copyToClipboardFallback(text, type);
+            });
+        } else {
+            // Fallback for older browsers
+            copyToClipboardFallback(text, type);
+        }
+    }
+    
+    function copyToClipboardFallback(text, type) {
         var textarea = $("<textarea>");
         textarea.val(text).css({position: "fixed", opacity: 0});
         $("body").append(textarea);
         textarea[0].select();
         try {
-            document.execCommand("copy");
+            var successful = document.execCommand("copy");
+            if (successful) {
+                showAlert(type + " copied to clipboard!", "success");
+            } else {
+                showAlert("Failed to copy " + type, "danger");
+            }
         } catch(err) {
-            showAlert("Failed to copy", "danger");
+            showAlert("Failed to copy " + type, "danger");
         }
         textarea.remove();
     }
     
     function downloadPattern() {
+        if (!currentPattern) return;
+        var content = "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<title>" + currentPattern.name + "</title>\n<link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\">\n<style>\n" + currentPattern.css + "\n</style>\n</head>\n<body>\n<div class=\"container\" style=\"margin-top:50px\">\n" + currentPattern.html + "\n</div>\n<script src=\"https://code.jquery.com/jquery-1.12.4.min.js\"></script>\n<script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js\"></script>\n<script>\n" + currentPattern.js + "\n</script>\n</body>\n</html>";
         var blob = new Blob([content], {type: "text/html"});
         var url = URL.createObjectURL(blob);
         var a = document.createElement("a");
@@ -270,6 +298,7 @@
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
+        showAlert("Downloaded: " + currentPattern.name, "success");
     }
     
     function showAlert(message, type) {
